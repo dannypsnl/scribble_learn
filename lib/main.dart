@@ -65,16 +65,107 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  Widget _buildColorButton(BuildContext context, {required Color color}) {
+    return ValueListenableBuilder(
+      valueListenable: notifier.select(
+        (value) => value is Drawing && value.selectedColor == color.toARGB32(),
+      ),
+      builder: (context, value, child) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        child: ColorButton(
+          color: color,
+          isActive: value,
+          onPressed: () => notifier.setColor(color),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          TextButton(onPressed: () => notifier.clear(), child: Text("Clear")),
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.clear),
+                tooltip: "clear",
+                onPressed: notifier.clear,
+              ),
+              IconButton(
+                icon: Icon(Icons.undo),
+                tooltip: "undo",
+                onPressed: notifier.undo,
+              ),
+              IconButton(
+                icon: Icon(Icons.redo),
+                tooltip: "redo",
+                onPressed: notifier.redo,
+              ),
+              _buildColorButton(context, color: Colors.black),
+              _buildColorButton(context, color: Colors.red),
+              _buildColorButton(context, color: Colors.yellow),
+              _buildColorButton(context, color: Colors.green),
+              _buildColorButton(context, color: Colors.blue),
+              _buildColorButton(context, color: Colors.grey),
+            ],
+          ),
+
           Expanded(
             child: SizedBox(height: 200.0, child: Scribble(notifier: notifier)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ColorButton extends StatelessWidget {
+  const ColorButton({
+    required this.color,
+    required this.isActive,
+    required this.onPressed,
+    this.outlineColor,
+    this.child,
+    super.key,
+  });
+
+  final Color color;
+
+  final Color? outlineColor;
+
+  final bool isActive;
+
+  final VoidCallback onPressed;
+
+  final Icon? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: kThemeAnimationDuration,
+      decoration: ShapeDecoration(
+        shape: CircleBorder(
+          side: BorderSide(
+            color: switch (isActive) {
+              true => outlineColor ?? color,
+              false => Colors.transparent,
+            },
+            width: 2,
+          ),
+        ),
+      ),
+      child: IconButton(
+        style: FilledButton.styleFrom(
+          backgroundColor: color,
+          shape: const CircleBorder(),
+          side: isActive
+              ? const BorderSide(color: Colors.white, width: 2)
+              : const BorderSide(color: Colors.transparent),
+        ),
+        onPressed: onPressed,
+        icon: child ?? const SizedBox(),
       ),
     );
   }
