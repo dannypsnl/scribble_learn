@@ -115,6 +115,17 @@ class _MyHomePageState extends State<MyHomePage> {
               _buildColorButton(context, color: Colors.green),
               _buildColorButton(context, color: Colors.blue),
               _buildColorButton(context, color: Colors.grey),
+
+              PopupMenuButton(
+                icon: Icon(Icons.adjust),
+                tooltip: "open stroke width adjust board",
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(value: 3.0, child: Text("small")),
+                  PopupMenuItem(value: 5.0, child: Text("middle")),
+                  PopupMenuItem(value: 7.0, child: Text("large")),
+                ],
+                onSelected: notifier.setStrokeWidth,
+              ),
             ],
           ),
 
