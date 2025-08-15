@@ -103,6 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 tooltip: "redo",
                 onPressed: notifier.redo,
               ),
+              IconButton(
+                icon: Icon(Icons.crop_landscape),
+                tooltip: "erase",
+                onPressed: notifier.setEraser,
+              ),
+
               _buildColorButton(context, color: Colors.black),
               _buildColorButton(context, color: Colors.red),
               _buildColorButton(context, color: Colors.yellow),
