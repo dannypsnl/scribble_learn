@@ -7,3 +7,7 @@ flutter run
 ```
 
 The command starts the app.
+
+## Screenshot
+
+![](screenshot.png)
